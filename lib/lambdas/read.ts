@@ -14,21 +14,31 @@ export async function handler(
   context: Context
 ): Promise<APIGatewayProxyResult> {
   const response: APIGatewayProxyResult = { statusCode: 200, body: "" };
+  response.headers = {
+    "Content-Type": "application/json",
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "*",
+    "Access-Control-Allow-Headers": "*",
+  };
+
   try {
     const primaryKey = event.queryStringParameters?.[PRIMARY_KEY];
     const month = event.queryStringParameters?.month;
+    const year = event.queryStringParameters?.year;
     const result = await ddbDocClient.send(
       new QueryCommand({
         TableName: TABLE_NAME,
         KeyConditionExpression: "#k=:val",
-        FilterExpression: "#m=:monthVal",
+        FilterExpression: "#m=:monthVal and #y=:yearVal",
         ExpressionAttributeNames: {
           "#k": "userName",
           "#m": "month",
+          "#y": "year",
         },
         ExpressionAttributeValues: {
           ":val": primaryKey,
           ":monthVal": month,
+          ":yearVal": year,
         },
       })
     );

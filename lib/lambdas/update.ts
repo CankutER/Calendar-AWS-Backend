@@ -15,6 +15,12 @@ export async function handler(
   context: Context
 ): Promise<APIGatewayProxyResult> {
   const response: APIGatewayProxyResult = { statusCode: 201, body: "" };
+  response.headers = {
+    "Content-Type": "application/json",
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "*",
+    "Access-Control-Allow-Headers": "*",
+  };
   try {
     const primaryKey = event.queryStringParameters?.[PRIMARY_KEY];
     const sortKey = event.queryStringParameters?.[SORT_KEY];
